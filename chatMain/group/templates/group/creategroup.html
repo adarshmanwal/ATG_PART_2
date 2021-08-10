@@ -1,0 +1,12 @@
+{% extends "chatblog/base.html" %}
+{% block content %}
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="formGroupExampleInput" class="form-label">Group name</label>
+            <input type="text" class="form-control" name="Gname" id="formGroupExampleInput" placeholder="Enter the group name" required>
+            <button type="submit" class="btn btn-primary my-3">Create</button>
+        </div>
+    </form>
+
+{% endblock content %}

@@ -1,0 +1,70 @@
+{% extends "chatblog/base.html" %}
+{% block content %}
+    <button type="button" class="btn btn-primary"><a href="{% url 'creategroup' %}" style="color: white;">Create Group +</a></button>
+    <form class="d-flex my-3">
+        <input class="form-control me-2" id="searchgroup" type="search" placeholder="search group" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    <hr>
+    <h4>{{user.username}}'s groups</h4>
+        {% for group in group_name %}
+            <div class="card d-flex" style="width: 18rem;">
+                <div class="card-body">
+                <h5 class="card-title">{{group}}</h5>
+                <p class="card-text">You are a memmber</p>
+                <a href="#" data-sender="{{group.id}}"  class="btn btn-primary chat">Explore</a>
+                <a href="#" data-sender="{{group.name}}"  class="btn btn-primary rem">Leave group</a>
+                </div>
+            </div>
+        {% endfor %}
+    <script>
+            var elements = document.getElementsByClassName("chat");
+            var myFunction = function() {
+                var loggedIn = this.getAttribute("data-sender");
+                var roomName = loggedIn
+                window.location.href = "/group/checkview/"+roomName;
+            };
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].addEventListener('click', myFunction, false);
+            }
+        //this is for remove functionality
+            var elements = document.getElementsByClassName("rem");
+            var myFunction = function() {
+                var loggedIn = this.getAttribute("data-sender");
+                alert("Are you shure you want to leave "+loggedIn + " group " )
+               // alert(roomName)
+                window.location.href = "/group/removeuser/"+loggedIn;
+            };
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].addEventListener('click', myFunction, false);
+            }
+            //search group 
+            let search=document.getElementById('searchgroup')
+            search.addEventListener("input",function(){
+                let inputVal=search.value
+                console.log("Event even fired ",inputVal)
+                let groupCard=document.getElementsByClassName('card')
+                Array.from(groupCard).forEach(function(elements){
+                    let cardtext=elements.getElementsByTagName('h5')[0].innerText;
+                    if(cardtext.includes(inputVal)){
+                        elements.style.display="block";
+
+                    }
+                    else{
+                        elements.style.display="none";
+                    }
+                })
+            })
+    </script>
+    <hr>
+    <h4>All groups</h4>
+    {% for group in groups %}
+        <div class="card my-3" style="width: 18rem;">
+            <div class="card-body">
+            <!-- <h5>all the membres are {{group.user}}</h5> -->
+            <h5 class="card-title">{{group.name}}</h5><p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="/group/adduser/{{group.name}}/"  class="btn btn-primary">Join</a>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock content %}

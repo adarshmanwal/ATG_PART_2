@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from user import views as users_view
+from group import views as group_view
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -28,6 +29,8 @@ urlpatterns = [
      path('profile/', users_view.profile, name='profile'),
      path('', include('chatblog.urls')),
      path('chat/', include('chat.urls'),name='chat'),
+     path('group/', include('group.urls'),name='group'),
+     
 ]
 
 if settings.DEBUG:

@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
 
     'user.apps.UserConfig',
+    'group.apps.GroupConfig',
     'chatblog.apps.ChatblogConfig',
     'crispy_forms',
     'django.contrib.admin',

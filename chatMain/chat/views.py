@@ -30,6 +30,9 @@ def checkview(request,room_name):
 def send(request):
     message = request.POST['message']
     room_name = request.POST['roomName']
+    # current_user = request.user
+    # all_message="By -> ",current_user,"=> ",message
+    # print("all the message is the asdkjfna kldsfna skdfjnalksdjnf asjn fasdf======++++++++ ",all_message)
     new_message = Message.objects.create(value=message,room=room_name)
     new_message.save()
     return HttpResponse('Message sent successfully')
