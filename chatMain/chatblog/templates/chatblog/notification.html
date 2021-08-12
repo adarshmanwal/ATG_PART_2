@@ -1,0 +1,24 @@
+{% extends "chatblog/base.html" %}
+{% block content %}
+{% for note in notification_messages%}
+<div class="card text-center">
+    <div class="card-header">
+      Notification
+    </div>
+    <div class="card-body">
+      <p class="card-text">{{note.notification}}</p>
+      <a href="#" class="btn btn-primary">Marke as Readed</a>
+    </div>
+    <div class="card-footer text-muted">
+      {{note.date}}
+    </div>
+  </div>
+
+
+
+{% endfor %}
+
+
+
+<!-- <h1>notification</h1> -->
+{% endblock content %}

@@ -1,7 +1,8 @@
 from django.http.response import HttpResponse,JsonResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.models import Group,User
-from .models import Room,Group_Message
+from .models import Room,Group_Message,Notification
+import json
 
 # Create your views here.
 def home(request):
@@ -43,13 +44,22 @@ def room(request, room_name):
         'room_name': room_name
     })
 def send(request):
-    message = request.POST['message']
-    room_name = request.POST['roomName']
-    # print("====== in the send function ====")
-    # print("all the data is in the game of the adsfkn alskdf",message,room_name)
+    data=json.loads(request.body)
+    message = data['message']
+    room_name = data['roomName']
+    dataURL = data['dataURL']
     username=request.user.username
-    # print(username)
-    new_message = Group_Message.objects.create(value=message,group_id=room_name,user=username)
+    print("=====>Saving ===> ", dataURL)
+    new_message = Group_Message.objects.create(value=message,group_id=room_name,user=username,dataURL=dataURL)
+
+    groupname=Group.objects.get(id=room_name)
+    usernames=User.objects.filter(groups__name=groupname)
+    notificationmessage="you get a message from "+str(groupname)+"by"+str(username)
+    for i in usernames:
+        print()
+        if(str(username)!=str(i)):
+            newnotificationmessage = Notification.objects.create(user=i,notification=notificationmessage)
+            newnotificationmessage.save()
     new_message.save()
     return HttpResponse('Message sent successfully')
 
@@ -63,13 +73,9 @@ def checkview(request,room_name):
         new_room.save()
         room_details = Room.objects.get(name=room_name)
         return render(request,'/group/'+room_name,{'room_details':room_details})
-
 def getMessages(request,room_name):
-    print("in the get messages ========== =+++++")
     username=request.user.username
-    print("this is the user name=====++++ ",username )
     messages = Group_Message.objects.filter(group_id=room_name)
-    # print(messages.user)
     return JsonResponse({"messages":list(messages.values()),"username":username})
 
 
@@ -79,3 +85,11 @@ def removeuser(request,room_name):
     user=request.user
     user.groups.remove(group)
     return redirect('/group/')
+
+
+def messageDetails(request,id):
+    res=Group_Message.objects.get(id=id)
+    groupid=res.group_id
+    res.delete()
+    # url='/group/'+str(groupid)
+    return render(request, 'group/md.html')

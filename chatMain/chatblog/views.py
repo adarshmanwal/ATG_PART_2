@@ -1,8 +1,10 @@
 
+from django.http.response import HttpResponse
 from django.shortcuts import render
 from .models import post
 from django.views.generic import ListView,DetailView,CreateView,UpdateView,DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin,UserPassesTestMixin
+from group.models import Notification
 
 # Create your views here.
 
@@ -13,8 +15,6 @@ def home(request):
     }
     
     return render(request, 'chatblog/home.html',context)
-
-    
 
 class PostListView(ListView):
     model=post
@@ -61,3 +61,12 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 def about(request):
     return render(request, 'chatblog/about.html')
+
+
+
+def notification(request):
+    username=request.user.id
+    # print("the user name is ===========> ",user)
+    notification_messages=Notification.objects.filter(user=username)
+    # print(notification_messages)
+    return render(request,'chatblog/notification.html',{'notification_messages':notification_messages})
